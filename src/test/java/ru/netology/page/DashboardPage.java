@@ -38,10 +38,7 @@ public class DashboardPage {
         return Integer.parseInt(value);
     }
 
-
     public void verifyIsDashboardPage() {
         heading.shouldBe(visible);
     }
-
-    private SelenideElement amountField = $("[data-test-id=amount] input");
 }
