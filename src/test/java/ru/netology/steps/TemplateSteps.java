@@ -5,15 +5,22 @@ import io.cucumber.java.ru.И;
 import io.cucumber.java.ru.Когда;
 import io.cucumber.java.ru.Пусть;
 import io.cucumber.java.ru.Тогда;
+
 import ru.netology.page.DashboardPage;
 import ru.netology.page.LoginPage;
+import ru.netology.page.TransferPage;
 import ru.netology.page.VerificationPage;
+
+import static ru.netology.data.DataHelper.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class TemplateSteps {
     private static LoginPage loginPage;
     private static DashboardPage dashboardPage;
     private static VerificationPage verificationPage;
+    private static TransferPage transferPage;
+
 
     @Пусть("открыта страница с формой авторизации {string}")
     public void openAuthPage(String url) {
@@ -40,13 +47,28 @@ public class TemplateSteps {
         verificationPage.verifyCodeIsInvalid();
     }
 
-    @Когда("пользователь выбрав карту перевода, указывает в поле сумму {string} с которой собирается произвести пополнение и номер карты {string}")
+    @Когда("пользователь в личном кабинете нажимает на кнопку пополнение счёта '5559 0000 0000 0001' \\{{int}}")
+    public void verifyDashboardPageV2(int index) {
+        transferPage = dashboardPage.getCardBalance(index);
+    }
+
+    @И("указывает в поле сумму {string} и номер карты списания {string}")
     public void transferFromSecondCardToFirst(String amount, String count) {
-        dashboardPage = dashboardPage.transferFromSecondCountOnFirst(amount, count);
+        dashboardPage = transferPage.transferFromSecondCountOnFirst(amount, count);
     }
 
     @Тогда("пользователь успешно производит перевод и попадает на страницу с 'Номерами карт'")
-    public void verifyDashboardPageV2() {
+    public void verifyDashboardPageV3() {
         dashboardPage.verifyIsDashboardPage();
+    }
+
+    @Когда("сумма на счету '5559 0000 0000 0001' равняется \\{{int}}, сумма на счету '5559 0000 0000 0002' равняется \\{{int}}")
+    public void Check(int amountFirstCard, int amountSecondCard) {
+        var firstCardInfo = getFirstCardInfo();
+        var secondCardInfo = getSecondCardInfo();
+        var firstCardBalance = dashboardPage.getCardBalanceV2(firstCardInfo);
+        var secondCardBalance = dashboardPage.getCardBalanceV2(secondCardInfo);
+        assertEquals(amountFirstCard, firstCardBalance);
+        assertEquals(amountSecondCard, secondCardBalance);
     }
 }
