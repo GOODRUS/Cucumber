@@ -47,9 +47,9 @@ public class TemplateSteps {
         verificationPage.verifyCodeIsInvalid();
     }
 
-    @Когда("пользователь в личном кабинете нажимает на кнопку пополнение счёта '5559 0000 0000 0001' \\{{int}}")
-    public void verifyDashboardPageV2(int index) {
-        transferPage = dashboardPage.getCardBalance(index);
+    @Когда("пользователь в личном кабинете нажимает на кнопку пополнение счёта {string} \\{{int}}")
+    public void verifyDashboardPageV2(String count, int index) {
+        transferPage = dashboardPage.clickCard(index);
     }
 
     @И("указывает в поле сумму {string} и номер карты списания {string}")
@@ -62,12 +62,10 @@ public class TemplateSteps {
         dashboardPage.verifyIsDashboardPage();
     }
 
-    @Когда("сумма на счету '5559 0000 0000 0001' равняется \\{{int}}, сумма на счету '5559 0000 0000 0002' равняется \\{{int}}")
-    public void Check(int amountFirstCard, int amountSecondCard) {
-        var firstCardInfo = getFirstCardInfo();
-        var secondCardInfo = getSecondCardInfo();
-        var firstCardBalance = dashboardPage.getCardBalanceV2(firstCardInfo);
-        var secondCardBalance = dashboardPage.getCardBalanceV2(secondCardInfo);
+    @Когда("сумма на счету {string} равняется \\{{int}}, сумма на счету {string} равняется \\{{int}}")
+    public void Check(String countFirst, int amountFirstCard, String countSecond, int amountSecondCard) {
+        var firstCardBalance = dashboardPage.getCardBalance(countFirst);
+        var secondCardBalance = dashboardPage.getCardBalance(countSecond);
         assertEquals(amountFirstCard, firstCardBalance);
         assertEquals(amountSecondCard, secondCardBalance);
     }

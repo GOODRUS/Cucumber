@@ -21,12 +21,12 @@ public class DashboardPage {
         heading.shouldBe(visible);
     }
 
-    public int getCardBalanceV2(DataHelper.CardInfo cardInfo) {
-        var text = cards.findBy(text(cardInfo.getCardNumber().substring(15))).getText();
+    public int getCardBalance(String cardInfo) {
+        var text = cards.findBy(text(cardInfo.substring(15))).getText();
         return extractBalance(text);
     }
 
-    public TransferPage getCardBalance(int index) {
+    public TransferPage clickCard(int index) {
         cards.get(index).$("button").click();
         return new TransferPage();
     }
